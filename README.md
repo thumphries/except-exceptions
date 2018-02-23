@@ -12,3 +12,4 @@ Decisively crush the MonadCatch clique
 - finally
 - try
 - handle??
+- lift monadcatch functions??
