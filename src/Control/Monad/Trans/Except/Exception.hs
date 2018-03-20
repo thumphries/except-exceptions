@@ -3,6 +3,7 @@
 #if MIN_VERSION_exceptions(0,9,0)
 module Control.Monad.Trans.Except.Exception (
     bracket
+  , bracket_
   , bracketOnError
   ) where
 
@@ -23,6 +24,18 @@ bracket ::
   -> ExceptT e m b
 bracket =
   Ex.bracket
+{-# INLINE bracket #-}
+
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracket_'.
+bracket_ ::
+     MonadMask m
+  => ExceptT e m a
+  -> ExceptT e m b
+  -> ExceptT e m c
+  -> ExceptT e m c
+bracket_ =
+  Ex.bracket_
+{-# INLINE bracket_ #-}
 
 -- | Exception and 'Left'-safe version of 'Control.Exception.bracketOnError'.
 bracketOnError ::
@@ -36,10 +49,12 @@ bracketOnError ::
   -> ExceptT e m b
 bracketOnError =
   Ex.bracketOnError
+{-# INLINE bracketOnError #-}
 
 #else
 module Control.Monad.Trans.Except.Exception (
     bracket
+  , bracket_
   , bracketOnError
   ) where
 
@@ -83,6 +98,17 @@ bracket acquire release run =
         -- Acquire succeeded, we can do some work
         runExceptT (run r'))
 {-# INLINE bracket #-}
+
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracket_'.
+bracket_ ::
+     MonadMask m
+  => ExceptT e m a
+  -> ExceptT e m b
+  -> ExceptT e m c
+  -> ExceptT e m c
+bracket_ acquire release run =
+  bracket acquire (const release) (const run)
+{-# INLINE bracket_ #-}
 
 -- | Exception and 'Left'-safe version of 'Control.Exception.bracketOnError'.
 bracketOnError ::

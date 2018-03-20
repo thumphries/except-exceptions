@@ -1,6 +1,6 @@
 name:                except-exceptions
 version:             0.1
-synopsis:            Safely and consistently deal with exceptions in ExceptT
+synopsis:            Safely deal with exceptions in ExceptT
 homepage:            https://github.com/thumphries/except-exceptions
 license:             BSD3
 license-file:        LICENSE
@@ -28,3 +28,4 @@ library
   build-depends:
                        base                >=4.9 && <4.11
                      , exceptions          >=0.6 && <0.11
+                     , transformers        >=0.4 && <0.6
