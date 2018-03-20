@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 module Control.Monad.Trans.Except.Exception (
     bracket
+  , bracketOnError
   ) where
 
 
@@ -41,6 +42,37 @@ bracket acquire release run =
       Right r' ->
         -- Acquire succeeded, we can do some work
         runExceptT (run r'))
+{-# INLINE bracket #-}
+
+bracketOnError ::
+     MonadMask m
+  => ExceptT e m a
+  -- ^ Acquire
+  -> (a -> ExceptT e m c)
+  -- ^ Release
+  -> (a -> ExceptT e m b)
+  -- ^ Do some work
+  -> ExceptT e m b
+bracketOnError acquire release run =
+  ExceptT $ bracketOnErrorF
+    (runExceptT acquire)
+    (\r -> case r of
+      Left _ ->
+        -- Acquire failed, we have nothing to release
+        return . Right $ ()
+      Right r' ->
+        -- Acquire succeeded, we need to try and release
+        runExceptT (release r') >>= \x -> return $ case x of
+          Left err -> Left (Left err)
+          Right _ -> Right ())
+    (\r -> case r of
+      Left err ->
+        -- Acquire failed, we have nothing to run
+        return . Left $ err
+      Right r' ->
+        -- Acquire succeeded, we can do some work
+        runExceptT (run r'))
+{-# INLINE bracketOnError #-}
 
 data BracketResult a =
     BracketOk a
@@ -67,3 +99,19 @@ bracketF a f g =
       BracketOk b -> do
         z <- f a'
         return $ either id (const b) z
+{-# INLINE bracketF #-}
+
+bracketOnErrorF :: MonadMask m => m a -> (a -> m (Either b c)) -> (a -> m b) -> m b
+bracketOnErrorF a f g =
+  mask $ \restore -> do
+    a' <- a
+    x <- restore (BracketOk `liftM` g a') `catchAll`
+           (\ex -> either BracketFailedFinalizerError (const $ BracketFailedFinalizerOk ex) `liftM` f a')
+    case x of
+      BracketFailedFinalizerOk ex ->
+        throwM ex
+      BracketFailedFinalizerError b ->
+        return b
+      BracketOk b -> do
+        return b
+{-# INLINE bracketOnErrorF #-}

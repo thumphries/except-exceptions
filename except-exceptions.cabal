@@ -5,7 +5,7 @@ homepage:            https://github.com/thumphries/except-exceptions
 license:             BSD3
 license-file:        LICENSE
 author:              Tim Humphries
-maintainer:          tim@utf8.me
+maintainer:          Tim Humphries <tim@utf8.me>
 category:            Monad
 build-type:          Simple
 cabal-version:       >=1.10
