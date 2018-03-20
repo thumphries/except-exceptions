@@ -16,6 +16,11 @@ description:
   `MonadMask` instance. If available, this package simply re-exports the
   relevant functions from `exceptions`.
 
+homepage:              https://github.com/thumphries/except-exceptions
+bug-reports:           https://github.com/thumphries/except-exceptions/issues
+source-repository head
+  type: git
+  location: https://github.com/thumphries/except-exceptions
 
 library
   default-language:    Haskell2010
