@@ -1,7 +1,6 @@
 name:                except-exceptions
 version:             0.1
 synopsis:            Safely deal with exceptions in ExceptT
-homepage:            https://github.com/thumphries/except-exceptions
 license:             BSD3
 license-file:        LICENSE
 author:              Tim Humphries
@@ -10,16 +9,21 @@ category:            Monad
 build-type:          Simple
 cabal-version:       >=1.10
 description:
-  Exception-related functions for `ExceptT`.
+  Exception-related functions for @ExceptT@.
   .
-  As of `exceptions-0.9.0`, `ExceptT` has a valid and sensible
-  `MonadMask` instance. If available, this package simply re-exports the
-  relevant functions from `exceptions`.
+  As of @exceptions-0.9.0@, @ExceptT@ has a valid and sensible
+  @MonadMask@ instance. If available, this package simply re-exports the
+  relevant functions from @exceptions@.
 
+homepage:              https://github.com/thumphries/except-exceptions
+bug-reports:           https://github.com/thumphries/except-exceptions/issues
+source-repository head
+  type: git
+  location: https://github.com/thumphries/except-exceptions
 
 library
   default-language:    Haskell2010
-  ghc-options:         -Wall -Werror
+  ghc-options:         -Wall
   hs-source-dirs:      src
 
   exposed-modules:     

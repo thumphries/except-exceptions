@@ -30,8 +30,11 @@ bracket =
 bracket_ ::
      MonadMask m
   => ExceptT e m a
+  -- ^ Initialise
   -> ExceptT e m b
+  -- ^ Finalise
   -> ExceptT e m c
+  -- ^ Do some work
   -> ExceptT e m c
 bracket_ =
   Ex.bracket_
@@ -103,8 +106,11 @@ bracket acquire release run =
 bracket_ ::
      MonadMask m
   => ExceptT e m a
+  -- ^ Initialise
   -> ExceptT e m b
+  -- ^ Finalise
   -> ExceptT e m c
+  -- ^ Do some work
   -> ExceptT e m c
 bracket_ acquire release run =
   bracket acquire (const release) (const run)
