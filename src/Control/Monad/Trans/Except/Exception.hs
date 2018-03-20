@@ -1,4 +1,43 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+#if MIN_VERSION_exceptions(0,9,0)
+module Control.Monad.Trans.Except.Exception (
+    bracket
+  , bracketOnError
+  ) where
+
+
+import           Control.Monad.Catch (MonadMask)
+import qualified Control.Monad.Catch as Ex
+import           Control.Monad.Trans.Except (ExceptT)
+
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracket'.
+bracket ::
+     MonadMask m
+  => ExceptT e m a
+  -- ^ Acquire
+  -> (a -> ExceptT e m c)
+  -- ^ Release
+  -> (a -> ExceptT e m b)
+  -- ^ Do some work
+  -> ExceptT e m b
+bracket =
+  Ex.bracket
+
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracketOnError'.
+bracketOnError ::
+     MonadMask m
+  => ExceptT e m a
+  -- ^ Acquire
+  -> (a -> ExceptT e m c)
+  -- ^ Release
+  -> (a -> ExceptT e m b)
+  -- ^ Do some work
+  -> ExceptT e m b
+bracketOnError =
+  Ex.bracketOnError
+
+#else
 module Control.Monad.Trans.Except.Exception (
     bracket
   , bracketOnError
@@ -14,6 +53,7 @@ import           Data.Either (Either (..), either)
 import           Data.Function (($), (.), const, id)
 
 
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracket'.
 bracket ::
      MonadMask m
   => ExceptT e m a
@@ -44,6 +84,7 @@ bracket acquire release run =
         runExceptT (run r'))
 {-# INLINE bracket #-}
 
+-- | Exception and 'Left'-safe version of 'Control.Exception.bracketOnError'.
 bracketOnError ::
      MonadMask m
   => ExceptT e m a
@@ -115,3 +156,4 @@ bracketOnErrorF a f g =
       BracketOk b -> do
         return b
 {-# INLINE bracketOnErrorF #-}
+#endif

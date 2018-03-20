@@ -1,15 +1,7 @@
 # except-exceptions
-ExceptT plus exceptions
 
-Provide Control.Exception equivalents for ExceptT.
+Exception-related functions for `ExceptT`.
 
-Decisively crush the MonadCatch clique
-
-- bracket
-- bracketOnError
-- bracketM
-- bracketIO
-- finally
-- try
-- handle??
-- lift monadcatch functions??
+As of `exceptions-0.9.0`, `ExceptT` has a valid and sensible
+`MonadMask` instance. If available, this package simply re-exports the
+relevant functions from `exceptions`.
