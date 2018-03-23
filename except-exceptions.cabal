@@ -38,6 +38,6 @@ library
                        Control.Monad.Trans.Except.Exception
 
   build-depends:
-                       base                >=3   && <4.11
+                       base                >=3   && <4.12
                      , exceptions          >=0.6 && <0.11
                      , transformers        >=0.4 && <0.6
